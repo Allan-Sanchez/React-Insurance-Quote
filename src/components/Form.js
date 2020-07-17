@@ -1,5 +1,8 @@
 import React ,{useState}from "react";
 import styled from '@emotion/styled';
+import {getDiferentYear,getCalcModel,getPlan} from '../herper';
+
+
 
 const Envase = styled.div`
     display:flex;
@@ -41,15 +44,27 @@ const Button = styled.button`
     }
 `;
 
+const Error = styled.div`
+  background-color:#FC8181;
+  color:white;
+  padding:1rem;
+  width:90%;
+  font-size:20px;
+  text-align:center;
+  margin-bottom: 2rem;
+`;
 
 
-const FormContent = () => {
+
+const FormContent = ({getSummary}) => {
 
     const [data, setData] = useState({
         model:'',
         plan:'',
         year:''
     });
+
+    const [error, setError] = useState(false);
 
     const {model, plan, year} = data;
 
@@ -58,10 +73,40 @@ const FormContent = () => {
             ...data,
             [e.target.name] : e.target.value
         })
-    }
+        
+      }
+    const handleQuote = (e)=>{
+      e.preventDefault();
+      
+      if (model.trim() === '' || plan.trim() === '' || year.trim() === '' ) {
+        setError(true);
+        return;                                                                                     
+      }
+
+      setError(false);
+      let base = 2000;
+
+      // ANCHOR get diferent year
+      const diferentYear = getDiferentYear(year);
+
+      // ANCHOR for each year, there is subtract the 3%
+      base -=((diferentYear * 3)* base)/100;
+      
+      // ANCHOR American 15% Asian 5% European 30%
+      base = getCalcModel(model) * base;
+
+      const setPlane = getPlan(plan);
+      base = parseFloat(setPlane * base).toFixed(2);
+
+      getSummary({
+        value:base,
+        data
+      });
+    };
 
   return (
-    <form>
+    <form onSubmit={handleQuote}>
+      {error ?<Error>Please, fill each input the of form</Error>  :null}
       <Envase>
         <Label>Model</Label>
 
@@ -69,8 +114,8 @@ const FormContent = () => {
             name="model"
             value={model}
             onChange={getInformation}>
-          <option value="">--Selected--</option>
-          <option value="americano">American</option>
+          <option value="">--Select--</option>
+          <option value="american">American</option>
           <option value="european">European</option>
           <option value="asian">Asian</option>
         </Select>
@@ -80,7 +125,7 @@ const FormContent = () => {
         <Label >Year</Label>
 
         <Select name="year" value={year} onChange={getInformation}>
-          <option value="">-- Seleccione --</option>
+          <option value="">-- Select--</option>
           <option value="2021">2021</option>
           <option value="2020">2020</option>
           <option value="2019">2019</option>
@@ -99,7 +144,7 @@ const FormContent = () => {
           <InputRadio type="radio" name="plan" checked={plan === "basic" } onChange={getInformation} value="basic"/>Basic
           <InputRadio type="radio" name="plan" checked={plan === "complete"} onChange={getInformation} value="complete"/>Complete
       </Envase>
-      <Button type="button">Quote</Button>
+      <Button type="submit">Quote</Button>
     </form>
   );
 };

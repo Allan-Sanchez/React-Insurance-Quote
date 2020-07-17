@@ -1,6 +1,7 @@
-import React from "react";
+import React,{useState} from "react";
 import Header from "./components/Header";
 import FormContent from "./components/Form";
+import Summary from "./components/Summary";
 import styled from "@emotion/styled";
 
 const Container = styled.div`
@@ -14,11 +15,28 @@ const ContainerForm = styled.div`
 `;
 
 function App() {
+
+    const  [summary , getSummary]= useState({
+      value:0,
+      data:{
+        model:'',
+        year:'',
+        plan:''
+      }
+    });
+
+    const {value,data} = summary;
   return (
     <Container>
       <Header title={"Insurance Quote"} />
       <ContainerForm>
-        <FormContent/>
+        <FormContent 
+          getSummary={getSummary}
+        />
+        <Summary 
+        setValue={value}
+        data={data}
+        />
       </ContainerForm>
     </Container>
   );
