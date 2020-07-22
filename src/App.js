@@ -2,7 +2,9 @@ import React,{useState} from "react";
 import Header from "./components/Header";
 import FormContent from "./components/Form";
 import Summary from "./components/Summary";
+import Spinner from "./components/Spinner";
 import styled from "@emotion/styled";
+
 
 const Container = styled.div`
   max-width: 600px;
@@ -25,6 +27,8 @@ function App() {
       }
     });
 
+    const [loading, getLoading] = useState(false);
+
     const {value,data} = summary;
   return (
     <Container>
@@ -32,7 +36,10 @@ function App() {
       <ContainerForm>
         <FormContent 
           getSummary={getSummary}
+          getLoading={getLoading}
         />
+          {loading ? <Spinner/> : null}
+        
         <Summary 
         setValue={value}
         data={data}
@@ -41,5 +48,7 @@ function App() {
     </Container>
   );
 }
+
+
 
 export default App;

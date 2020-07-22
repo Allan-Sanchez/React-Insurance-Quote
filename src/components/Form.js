@@ -2,6 +2,7 @@ import React ,{useState}from "react";
 import styled from '@emotion/styled';
 import {getDiferentYear,getCalcModel,getPlan} from '../herper';
 
+import PropTypes from 'prop-types';
 
 
 const Envase = styled.div`
@@ -56,7 +57,7 @@ const Error = styled.div`
 
 
 
-const FormContent = ({getSummary}) => {
+const FormContent = ({getSummary,getLoading}) => {
 
     const [data, setData] = useState({
         model:'',
@@ -98,10 +99,15 @@ const FormContent = ({getSummary}) => {
       const setPlane = getPlan(plan);
       base = parseFloat(setPlane * base).toFixed(2);
 
-      getSummary({
-        value:base,
-        data
-      });
+      getLoading(true);
+
+      setTimeout(() => {
+        getLoading(false);
+        getSummary({
+          value:Number(base),
+          data
+        });
+      }, 1000);
     };
 
   return (
@@ -147,6 +153,11 @@ const FormContent = ({getSummary}) => {
       <Button type="submit">Quote</Button>
     </form>
   );
+};
+
+FormContent.propType ={
+  getSummary : PropTypes.func.isRequired,
+  getLoading :PropTypes.func.isRequired
 };
 
 export default FormContent;

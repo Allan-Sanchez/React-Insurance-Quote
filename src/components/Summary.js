@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import {getCapitalLetter} from '../herper';
 import Result from './Result';
+import PropTypes from 'prop-types';
 
 const ResumSumary = styled.div`
     padding: 1rem;
@@ -32,5 +33,8 @@ const Summary = ({setValue,data}) => {
         </ResumSumary>
     );
 }
- 
+ Summary.propTypes ={
+    setValue: PropTypes.number.isRequired,
+    data:PropTypes.object.isRequired
+ }
 export default Summary;

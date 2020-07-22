@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import {TransitionGroup,CSSTransition} from 'react-transition-group';
 
 
 const DefaultP = styled.p`
@@ -23,7 +24,9 @@ const BoxTotal = styled.div`
     border-radius:10px;
     padding: 1rem;
     color:#44337A;
+    position: relative;
 `;
+
 
 const Result = ({setValue}) => {
     return ( 
@@ -31,7 +34,18 @@ const Result = ({setValue}) => {
             ? <DefaultP>Please, Fill input year, model, plan</DefaultP>
             :   <ContainerTotal>
                 <BoxTotal>
-                    The total is : <strong>{setValue}</strong>
+                    <TransitionGroup
+                        component="p"
+                        className="result"
+                    >
+                        <CSSTransition
+                        classNames="result"
+                        key={setValue}
+                        timeout={{enter:500,exit:500}}
+                        >
+                            <span>The total is : <strong>{setValue}</strong></span>
+                        </CSSTransition>
+                    </TransitionGroup>
                 </BoxTotal>
             </ContainerTotal>
      );
